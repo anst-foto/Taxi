@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Taxi.Desktop.ViewModels"
+        xmlns:m="using:Taxi.Desktop.Models"
         
         x:Class="Taxi.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -10,7 +11,72 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
+    
+    <Window.Resources>
+        <DataTemplate x:Key="DriversTemplate"
+                      DataType="{x:Type m:Person}">
+            <Grid ColumnDefinitions="*, 2*">
+                <TextBlock Text="{Binding Id}"
+                           Grid.Column="0"/>
+                <TextBlock Grid.Column="1">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="LastName"/>
+                            <Binding Path="FirstName"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <Grid RowDefinitions="*, *">
+        <Grid ColumnDefinitions="*, 3*" 
+              Grid.Row="0">
+            <ListBox ItemsSource="{Binding Drivers}"
+                     SelectedItem="{Binding SelectedDriver}"
+                     SelectionMode="Single"
+                     ItemTemplate="{StaticResource DriversTemplate}"
+                     Grid.Column="0"/>
+            
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="1">
+                <Grid ColumnDefinitions="*, 4*">
+                    <Label Content="ID"
+                           Target="{Binding ElementName=InputId}"
+                           Grid.Column="0"/>
+                    <TextBox x:Name="InputId"
+                             Text="{Binding PersonId, UpdateSourceTrigger=PropertyChanged}"
+                             IsReadOnly="True"
+                             Grid.Column="1"/>
+                </Grid>
+                <Grid ColumnDefinitions="*, 4*">
+                    <Label Content="Фамилия"
+                           Target="{Binding ElementName=InputLastName}"
+                           Grid.Column="0"/>
+                    <TextBox x:Name="InputLastName"
+                             Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Column="1"/>
+                </Grid>
+                <Grid ColumnDefinitions="*, 4*">
+                    <Label Content="Имя"
+                           Target="{Binding ElementName=InputFirstName}"
+                           Grid.Column="0"/>
+                    <TextBox x:Name="InputFirstName"
+                             Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Column="1"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Сохранить"
+                            Command="{Binding CommandSaveDriver}"/>
+                    <Button Content="Очистить"
+                            Command="{Binding CommandClear}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <TextBlock Text="В разработке..."/>
+        </Grid>
+    </Grid>
 </Window>
