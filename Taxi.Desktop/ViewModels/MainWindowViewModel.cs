@@ -38,7 +38,7 @@ public class MainWindowViewModel : ViewModelBase
                 LastName = d?.LastName;
             });
         
-        _dbContext = new TaxiDbContext();
+        _dbContext = TaxiDbContextFactory.CreateDbContext();
 
         LoadDrivers();
 

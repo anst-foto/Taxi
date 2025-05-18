@@ -4,15 +4,18 @@ namespace Taxi.Desktop.Models;
 
 public class TaxiDbContext : DbContext
 {
+    private readonly string _connectionString;
     public DbSet<Person> Drivers { get; set; }
     public DbSet<Car> Cars { get; set; }
 
-    public TaxiDbContext()
-    { }
+    public TaxiDbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Server=127.0.0.1;Port=5432;Username=postgres;Password=1234;Database=taxi_db;",
+        optionsBuilder.UseNpgsql(_connectionString,
             o => o.MapEnum<CarStatus>("CarStatus"));
     }
 }
